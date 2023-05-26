@@ -1,7 +1,7 @@
 /**
  * 
  */
-package projects.entity;
+package projects3.entity;
 
 import java.math.BigDecimal;
 

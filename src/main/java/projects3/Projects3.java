@@ -23,9 +23,15 @@ public class Projects3 {
 	
 	// @formatter:off
 			private List<String> operations = List.of(
-					"1) Add a project"
+					"1) Add a project",
+					"2) List projects",
+					"3) Select a project"
+					
 					);
 			// @formatter:on
+
+
+			private Object curProject;
 	
 	public static void main(String[] args) {
 		new Projects3().processUserSelections();
@@ -48,6 +54,15 @@ public class Projects3 {
 								createProject();
 								break;
 								
+							case 2:
+								listProjects();
+								break;
+								
+							case 3:
+								selectProject();
+								break;	
+								
+								
 						default:
 							System.out.println("\n" + selection + " is not a valid selection. Try again.");
 								break;
@@ -55,12 +70,31 @@ public class Projects3 {
 							
 					}
 					catch(Exception e) {
-						System.out.println("\nError: " + e + "Try again."); 
+						System.out.println("\nError: " + e + " Try again. "); 
 					}
 				} 
 		
 			}
-			
+			//this method calls the list of projects and allows us to select projects via project ID
+			private void selectProject() {
+				listProjects();
+				Integer projectId = getIntInput("Enter a project ID to select a project");
+				//unselects current project
+				curProject = null;
+				//Will throw an exception if current project ID is invalid
+				curProject = Project3Service.fetchProjectById(projectId);
+				
+			}
+			//creates a list of project named "projects" which will fetch all projects and print their project ID and name
+			private void listProjects() {
+				List<Project> projects = Project3Service.fetchAllProjects();
+				
+				System.out.println("\nProjects: ");
+				
+				projects.forEach(project -> System.out.println("   " + project.getProjectId()
+				+ ": " + project.getProjectName()));
+			}
+			//Creates the project and its contents. it will set the parameters and prompts for the user to input.
 			private void createProject() {
 				String projectName = getStringInput("Enter the project name");
 				BigDecimal estimatedHours = getDecimalInput("Enter the estimated hours");
@@ -136,6 +170,11 @@ public class Projects3 {
 				
 				operations.forEach(line -> System.out.println("   " + line));
 			
+				if(Objects.isNull(curProject)) {
+					System.out.println("\nYou are not working with a project.");
+				} else {
+					System.out.println("\nYou are working with project: "+ curProject);
+				}
 				
 			}
 }
